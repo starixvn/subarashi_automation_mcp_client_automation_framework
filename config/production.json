@@ -1,0 +1,18 @@
+{
+  "gemini_api_key": "",
+  "environment": "production",
+  "gemini_model": "gemini-2.0-flash-exp",
+  "mcp_server_url": "https://mcp-server-automation.nexdev.net/sse",
+  "transport_type": "sse",
+  "api_host": "0.0.0.0",
+  "api_port": 5001,
+  "api_reload": false,
+  "frontend_port": 5002,
+  "log_level": "INFO",
+  "log_file": "/app/logs/mcp-client.log",
+  "max_tokens": 4000,
+  "temperature": 0.2,
+  "max_tool_calls": 5,
+  "request_timeout": 120,
+  "tool_timeout": 60
+}

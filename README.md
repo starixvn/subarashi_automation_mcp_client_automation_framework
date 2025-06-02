@@ -1,93 +1,153 @@
-# MCP_Client_Automation_Framework
+# 🤖 MCP Client - Advanced AI Assistant với Tool Integration
 
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/your-repo/mcp-client)
+[![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115.12+-red.svg)](https://fastapi.tiangolo.com)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.45.1+-orange.svg)](https://streamlit.io)
+[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://docker.com)
 
+## 🚀 System Features & Capabilities
 
-## Getting started
+### 🧠 Advanced AI Conversation Engine
+**Intelligent Chat System with Proactive Tool Integration**
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- **Smart Conversation Management**: Real-time AI-powered conversations with context preservation and memory
+- **Proactive Tool Usage**: AI automatically selects and executes appropriate tools without user confirmation
+- **Strategic Planning**: Multi-step task execution with intelligent tool sequencing and dependency management
+- **Adaptive Error Recovery**: Dynamic strategy adjustment when tools fail or return unexpected results
+- **Context-Aware Responses**: AI understands conversation history and maintains contextual relevance across interactions
+- **Export & Analytics**: Complete conversation export with detailed statistics and tool usage tracking
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### 🛠️ Comprehensive Tool Management System
+**Direct Access to MCP Tools with Smart Execution**
 
-## Add your files
+- **Tool Discovery**: Automatic detection and cataloging of available MCP tools from connected servers
+- **Interactive Tool Testing**: Direct tool execution interface with parameter validation and result visualization  
+- **Tool Documentation**: Comprehensive tool descriptions, parameter specifications, and usage examples
+- **Batch Tool Operations**: Execute multiple tools in parallel with coordinated result processing
+- **Tool Result Processing**: Intelligent parsing of tool outputs including text, images, and embedded resources
+- **Tool Performance Monitoring**: Execution time tracking, success rates, and error analysis
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### 🔌 Multi-Protocol MCP Integration
+**Universal MCP Server Connectivity**
 
-```
-cd existing_repo
-git remote add origin https://gitlab.nexdev.net/subarashi/automation/mcp_client_automation_framework.git
-git branch -M main
-git push -uf origin main
-```
+- **Multi-Transport Support**: 
+  - **SSE (Server-Sent Events)**: HTTP-based streaming for web-compatible connections
+  - **WebSocket**: Real-time bidirectional communication for interactive applications
+  - **stdio**: Process-based communication for local tool integration
+- **Resource Management**: Access and read MCP resources with automatic content type detection
+- **Prompt Templates**: Use and execute MCP prompt templates with dynamic parameter substitution
+- **Connection Health Monitoring**: Continuous monitoring of MCP server connectivity with automatic reconnection
+- **Session Persistence**: Maintain long-lived connections with proper cleanup and resource management
 
-## Integrate with your tools
+### 🎨 Interactive Web Interface
+**Modern Streamlit-Based User Experience**
 
-- [ ] [Set up project integrations](https://gitlab.nexdev.net/subarashi/automation/mcp_client_automation_framework/-/settings/integrations)
+- **Tabbed Interface Design**:
+  - **Chat Assistant**: Full-featured conversation interface with AI tool integration
+  - **Tools Overview**: Visual tool catalog with search, filtering, and category organization
+  - **Tool Testing**: Direct tool execution playground with parameter input and result display
+  - **System Configuration**: Real-time configuration management with validation and testing
+- **Real-Time Status Dashboard**: Live system health monitoring with connection status indicators
+- **Responsive Design**: Optimized for desktop and mobile devices with adaptive layouts
+- **Export Capabilities**: Download conversations, tool results, and system reports
 
-## Collaborate with your team
+### 📡 RESTful API Services
+**Complete Backend API for Integration**
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- **Chat Endpoints**:
+  - Send messages with automatic AI processing and tool execution
+  - Retrieve conversation history with full context and metadata
+  - Clear conversations with optional selective deletion
+- **Tool Management APIs**:
+  - List available tools with detailed specifications and capabilities
+  - Execute individual tools with parameter validation and result formatting
+  - Get tool documentation and usage statistics
+- **Configuration Management**:
+  - Real-time configuration updates without service restart
+  - Configuration validation and testing endpoints
+  - Environment-specific settings management
+- **Health & Monitoring**:
+  - Comprehensive system health checks with detailed service status
+  - Performance metrics and connection diagnostics
+  - Service reconnection and recovery operations
+- **MCP Resource Access**:
+  - List and read MCP resources with content type detection
+  - Access prompt templates with parameter substitution
+  - Resource subscription and change notifications
 
-## Test and Deploy
+### 🔧 Dynamic Configuration System
+**Flexible Multi-Source Configuration Management**
 
-Use the built-in continuous integration in GitLab.
+- **Real-Time Configuration Updates**: Change settings without service restart or data loss
+- **Environment-Aware Settings**: Automatic detection and application of development/production configurations
+- **Configuration Validation**: Real-time validation of settings with detailed error reporting
+- **API Key Management**: Secure handling and testing of Google Gemini API keys
+- **MCP Server Configuration**: Dynamic MCP server URL and transport type configuration
+- **Parameter Tuning**: Adjustable AI parameters including temperature, max tokens, and tool call limits
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### 📊 Advanced Monitoring & Diagnostics
+**Comprehensive System Health & Performance Tracking**
 
-***
+- **Service Health Monitoring**: 
+  - Individual service status tracking (AI, MCP, Configuration)
+  - Connection quality monitoring with latency and error rate tracking
+  - Resource usage monitoring including memory and connection pools
+- **Performance Analytics**:
+  - Tool execution performance with timing and success rate metrics
+  - Conversation analytics with message counts and tool usage patterns
+  - System performance metrics including response times and throughput
+- **Error Tracking & Recovery**:
+  - Detailed error logging with context and stack traces
+  - Automatic error recovery with fallback strategies
+  - User-friendly error reporting with actionable resolution steps
 
-# Editing this README
+### 🤖 Intelligent AI Integration
+**Advanced Google Gemini Integration with MCP Tool Support**
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+- **Smart Schema Conversion**: Automatic conversion of MCP tool schemas to Gemini-compatible formats
+- **Adaptive Response Generation**: Context-aware AI responses with dynamic tool selection
+- **Multi-Modal Support**: Handle text, image, and embedded resource content types
+- **Parameter Optimization**: Intelligent adjustment of AI parameters based on task complexity
+- **Error Recovery**: Graceful handling of AI service errors with alternative strategies
+- **Conversation Memory**: Maintain conversation context across multiple interactions and tool executions
 
-## Suggestions for a good README
+### 🔄 Advanced Session Management
+**Robust Connection and State Management**
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- **Multi-Transport Session Handling**: Unified interface for different MCP transport protocols
+- **Connection Lifecycle Management**: Automatic connection establishment, monitoring, and cleanup
+- **State Preservation**: Maintain session state across reconnections and service restarts
+- **Resource Cleanup**: Proper cleanup of connections, sessions, and allocated resources
+- **Concurrent Session Support**: Handle multiple concurrent MCP connections and operations
+- **Session Recovery**: Automatic recovery from connection failures with state restoration
 
-## Name
-Choose a self-explaining name for your project.
+### 🛡️ Error Handling & Resilience
+**Comprehensive Error Management with Graceful Degradation**
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- **Structured Exception Handling**: Detailed error classification and context preservation
+- **Graceful Service Degradation**: Continue operation with reduced functionality when services are unavailable
+- **Automatic Recovery Mechanisms**: Self-healing capabilities for common error conditions
+- **User-Friendly Error Messages**: Clear, actionable error reporting for users
+- **Debug Information**: Detailed diagnostic information for troubleshooting and support
+- **Logging Integration**: Comprehensive error logging with appropriate severity levels
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### 🔍 Utility & Helper Functions
+**Comprehensive Support Functions for Enhanced Functionality**
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+- **Content Processing**: Extract and format text from various content types and tool results
+- **Data Validation**: Sanitize and validate tool arguments and user inputs
+- **Timestamp Management**: Format and handle timestamps across different components
+- **Text Processing**: Truncate, format, and process text content for display and storage
+- **Server Validation**: Validate MCP server URLs and connection parameters
+- **Tool Information Formatting**: Format tool call information for display and logging
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+### 📈 Performance Optimization Features
+**High-Performance Operation with Smart Caching**
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- **Intelligent Caching**: Multi-layer caching for health status, tool lists, and configuration data
+- **Async Operations**: Full asynchronous operation support for non-blocking performance
+- **Connection Pooling**: Efficient HTTP connection management for external services
+- **Resource Management**: Automatic cleanup and optimization of system resources
+- **Batch Processing**: Efficient batch operations for multiple tool executions
+- **Smart Cache Invalidation**: Intelligent cache management with automatic refresh strategies
