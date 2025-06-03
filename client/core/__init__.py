@@ -1,11 +1,13 @@
-from .config import settings, get_settings
-from .config_manager import (
+from .core_config import (
+    settings,
+    get_settings,
     get_config_manager,
     get_current_config,
     update_config,
     is_configured,
     MCPClientConfig,
     ConfigManager,
+    load_config,
 )
 from .session_manager import SessionManager
 from .exceptions import (
@@ -29,6 +31,7 @@ __all__ = [
     "is_configured",
     "MCPClientConfig",
     "ConfigManager",
+    "load_config",
     "SessionManager",
     "MCPClientError",
     "MCPConnectionError",

@@ -1,5 +1,5 @@
 {
-  "gemini_api_key": "AIzaSyCzU4ILLqMM2fytf3hMTez7ZWz_SgCp8oY",
+  "gemini_api_key": "",
   "gemini_model": "gemini-2.0-flash-exp",
   "mcp_server_url": "https://mcp-server-automation.nexdev.net/sse",
   "transport_type": "sse",

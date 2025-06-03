@@ -28,59 +28,63 @@ from client.frontend.utils.api_client import get_api_client, run_async
 HEALTH_CACHE_TIMEOUT = 60
 TOOLS_CACHE_TIMEOUT = 120
 
+
 def get_cached_health_status():
     """Get health status with optimized caching to reduce API calls."""
     current_time = time.time()
-    
-    if hasattr(st.session_state, 'health_cache'):
+
+    if hasattr(st.session_state, "health_cache"):
         cache_time, cached_data = st.session_state.health_cache
         if current_time - cache_time < HEALTH_CACHE_TIMEOUT:
             return cached_data
-    
+
     try:
         api_client = get_api_client()
         health = run_async(api_client.health_check())
-        
+
         st.session_state.health_cache = (current_time, health)
         return health
     except Exception as e:
-        if hasattr(st.session_state, 'health_cache'):
+        if hasattr(st.session_state, "health_cache"):
             return st.session_state.health_cache[1]
         return None
+
 
 def get_cached_tools_info():
     """Get tools info with optimized caching to reduce API calls."""
     current_time = time.time()
-    
-    if hasattr(st.session_state, 'tools_cache'):
+
+    if hasattr(st.session_state, "tools_cache"):
         cache_time, cached_data = st.session_state.tools_cache
         if current_time - cache_time < TOOLS_CACHE_TIMEOUT:
             return cached_data
-    
+
     try:
         api_client = get_api_client()
         tools_response = run_async(api_client.list_tools())
-        
+
         st.session_state.tools_cache = (current_time, tools_response)
         return tools_response
     except Exception as e:
-        if hasattr(st.session_state, 'tools_cache'):
+        if hasattr(st.session_state, "tools_cache"):
             return st.session_state.tools_cache[1]
         return None
 
+
 def smart_cache_clear():
     """Smart cache clearing - only clear when actually needed."""
-    if hasattr(st.session_state, 'health_cache'):
+    if hasattr(st.session_state, "health_cache"):
         cache_time, _ = st.session_state.health_cache
         if time.time() - cache_time > 300:  # 5 minutes
-            delattr(st.session_state, 'health_cache')
-    
-    if hasattr(st.session_state, 'tools_cache'):
+            delattr(st.session_state, "health_cache")
+
+    if hasattr(st.session_state, "tools_cache"):
         cache_time, _ = st.session_state.tools_cache
         if time.time() - cache_time > 600:  # 10 minutes
-            delattr(st.session_state, 'tools_cache')
+            delattr(st.session_state, "tools_cache")
 
-def initialize_app(): 
+
+def initialize_app():
     """Initialize application state and check backend connection."""
     if "app_initialized" not in st.session_state:
         st.session_state.app_initialized = False
@@ -109,16 +113,18 @@ def initialize_app():
         st.session_state.backend_connected = False
         st.error(f"🚨 **Backend Connection Failed**: {str(e)}")
         st.error("**Debug Info:**")
-        
+
         try:
             api_client = get_api_client()
             backend_url = api_client.base_url
             st.error(f"- Trying to connect to: {backend_url}")
-            st.error(f"- Backend should be running on: {backend_url.replace('http://', '')}")
+            st.error(
+                f"- Backend should be running on: {backend_url.replace('http://', '')}"
+            )
         except:
             st.error(f"- Trying to connect to: Backend API")
             st.error(f"- Backend should be running on: Check configuration")
-            
+
         st.error(f"- Current error: {type(e).__name__}")
 
         if st.button("🔄 Retry Connection"):
@@ -312,7 +318,9 @@ def show_configuration_required_message(feature: str):
     )
 
     if st.button(f"🔧 Go to Configuration", key=f"goto_config_{feature}"):
-        st.info("👆 Please click on the Configuration tab above to configure the system")
+        st.info(
+            "👆 Please click on the Configuration tab above to configure the system"
+        )
 
 
 def render_main_chat_tab():
@@ -322,7 +330,7 @@ def render_main_chat_tab():
     render_chat_interface()
 
     st.markdown("---")
-    
+
     col1, col2 = st.columns([3, 1])
 
     with col1:
@@ -331,22 +339,24 @@ def render_main_chat_tab():
     with col2:
         st.subheader("💬 Chat Status")
         render_chat_status()
-        
+
         st.divider()
-        
-        if st.button("📥 Export Chat", help="Export conversation to text", key="export_chat_main"):
+
+        if st.button(
+            "📥 Export Chat", help="Export conversation to text", key="export_chat_main"
+        ):
             export_text = export_conversation()
             stats = get_conversation_stats()
-            
+
             if stats.get("total_messages", 0) > 0:
                 st.download_button(
                     label="💾 Download",
                     data=export_text,
                     file_name=f"mcp_chat_{time.strftime('%Y%m%d_%H%M%S')}.md",
                     mime="text/markdown",
-                    key="download_chat_main"
+                    key="download_chat_main",
                 )
-                
+
                 st.metric("Messages", stats["total_messages"])
                 st.metric("Tools Used", stats["tools_used"])
             else:
@@ -390,7 +400,7 @@ def show_quick_status():
     st.subheader("📊 Status")
 
     health = get_cached_health_status()
-    
+
     if health:
         if health.get("status") == "healthy":
             st.success("✅ Backend Healthy")
@@ -405,8 +415,8 @@ def show_quick_status():
 
         model = health.get("gemini_model", "Unknown")
         st.text(f"🤖 AI: {model}")
-        
-        if hasattr(st.session_state, 'health_cache'):
+
+        if hasattr(st.session_state, "health_cache"):
             cache_age = int(time.time() - st.session_state.health_cache[0])
             st.caption(f"Data age: {cache_age}s")
     else:
@@ -420,7 +430,9 @@ def show_quick_actions():
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("🔄 Refresh Data", help="Refresh status data", key="refresh_data_main"):
+        if st.button(
+            "🔄 Refresh Data", help="Refresh status data", key="refresh_data_main"
+        ):
             smart_cache_clear()
             st.success("✅ Cache refreshed!")
             st.rerun()
@@ -432,17 +444,21 @@ def show_quick_actions():
             st.rerun()
 
     with col2:
-        if st.button("🔗 Reconnect MCP", help="Force reconnect to MCP server", key="reconnect_mcp_main"):
+        if st.button(
+            "🔗 Reconnect MCP",
+            help="Force reconnect to MCP server",
+            key="reconnect_mcp_main",
+        ):
             try:
                 api_client = get_api_client()
                 with st.spinner("Reconnecting..."):
                     result = run_async(api_client.reconnect_server())
-                
-                if hasattr(st.session_state, 'health_cache'):
-                    delattr(st.session_state, 'health_cache')
-                if hasattr(st.session_state, 'tools_cache'):
-                    delattr(st.session_state, 'tools_cache')
-                    
+
+                if hasattr(st.session_state, "health_cache"):
+                    delattr(st.session_state, "health_cache")
+                if hasattr(st.session_state, "tools_cache"):
+                    delattr(st.session_state, "tools_cache")
+
                 if result.get("success"):
                     st.success("✅ Reconnected!")
                 else:
@@ -451,11 +467,13 @@ def show_quick_actions():
                 st.error(f"❌ Error: {str(e)}")
             st.rerun()
 
-        if st.button("🧪 Test Health", help="Test backend connection", key="test_health_main"):
+        if st.button(
+            "🧪 Test Health", help="Test backend connection", key="test_health_main"
+        ):
             try:
-                if hasattr(st.session_state, 'health_cache'):
-                    delattr(st.session_state, 'health_cache')
-                    
+                if hasattr(st.session_state, "health_cache"):
+                    delattr(st.session_state, "health_cache")
+
                 api_client = get_api_client()
                 with st.spinner("Testing..."):
                     result = run_async(api_client.health_check())
@@ -470,7 +488,7 @@ def show_quick_actions():
 def show_tools_statistics():
     """Show tools statistics with optimized caching."""
     tools_response = get_cached_tools_info()
-    
+
     if tools_response and tools_response.get("success"):
         tools = tools_response.get("tools", [])
 
@@ -495,10 +513,12 @@ def show_tools_statistics():
         st.subheader("📈 Categories")
         for category, count in categories.items():
             st.text(f"{category}: {count}")
-            
-        if hasattr(st.session_state, 'tools_cache'):
+
+        if hasattr(st.session_state, "tools_cache"):
             cache_age = int(time.time() - st.session_state.tools_cache[0])
-            st.caption(f"Cache age: {cache_age}s (auto-refresh: {TOOLS_CACHE_TIMEOUT}s)")
+            st.caption(
+                f"Cache age: {cache_age}s (auto-refresh: {TOOLS_CACHE_TIMEOUT}s)"
+            )
 
     else:
         st.error("❌ Cannot load tools")

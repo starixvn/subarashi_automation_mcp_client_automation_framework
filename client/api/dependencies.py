@@ -4,8 +4,7 @@ from typing import Dict, Any
 from contextlib import asynccontextmanager
 
 from ..services.tool_service import ToolService
-from ..core.config import settings
-from ..core.config_manager import is_configured, get_current_config
+from ..core.core_config import settings, is_configured, get_current_config
 from ..shared.logger import get_logger
 
 logger = get_logger(__name__)
@@ -39,32 +38,42 @@ async def initialize_services():
             tool_service = get_tool_service()
             current_config = get_current_config()
 
-            logger.info(f"Attempting to connect to MCP server at {current_config.mcp_server_url}")
+            logger.info(
+                f"Attempting to connect to MCP server at {current_config.mcp_server_url}"
+            )
             try:
                 connected = await asyncio.wait_for(
-                    tool_service.connect_to_server(),
-                    timeout=10.0
+                    tool_service.connect_to_server(), timeout=10.0
                 )
-                
+
                 if connected:
-                    logger.info("✅ Successfully connected to MCP server during startup")
+                    logger.info(
+                        "✅ Successfully connected to MCP server during startup"
+                    )
                     try:
                         tools = await asyncio.wait_for(
-                            tool_service.get_available_tools(),
-                            timeout=5.0
+                            tool_service.get_available_tools(), timeout=5.0
                         )
                         logger.info(f"🛠️ Found {len(tools)} available tools")
                     except asyncio.TimeoutError:
-                        logger.warning("⚠️ Timeout getting tools, but connection is established")
+                        logger.warning(
+                            "⚠️ Timeout getting tools, but connection is established"
+                        )
                 else:
                     logger.warning("⚠️ Failed to connect to MCP server during startup")
-                    
+
             except asyncio.TimeoutError:
-                logger.warning("⏰ MCP connection timeout during startup - server may be slow or unreachable")
-                logger.info("💡 System will continue running. You can reconnect manually via the UI")
+                logger.warning(
+                    "⏰ MCP connection timeout during startup - server may be slow or unreachable"
+                )
+                logger.info(
+                    "💡 System will continue running. You can reconnect manually via the UI"
+                )
             except Exception as e:
                 logger.warning(f"⚠️ MCP connection failed during startup: {str(e)}")
-                logger.info("💡 System will continue running. Check your MCP server configuration")
+                logger.info(
+                    "💡 System will continue running. Check your MCP server configuration"
+                )
 
             if is_configured() and current_config.gemini_api_key:
                 try:
@@ -74,7 +83,9 @@ async def initialize_services():
                     if ai_configured:
                         logger.info("✅ AI service configured during startup")
                     else:
-                        logger.warning("⚠️ Failed to configure AI service during startup")
+                        logger.warning(
+                            "⚠️ Failed to configure AI service during startup"
+                        )
                 except Exception as e:
                     logger.warning(f"⚠️ AI service configuration failed: {str(e)}")
             else:

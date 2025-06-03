@@ -6,15 +6,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.openapi.utils import get_openapi
 
-from .routes import chat, tools, health, config, prompts, resources
+from .routes import chat, tools, health, config_api, prompts, resources
 from .dependencies import (
     initialize_services,
     cleanup_services,
     validate_service_config,
     get_service_health,
 )
-from ..core.config import settings
-from ..core.config_manager import is_configured, get_current_config
+from ..core.core_config import settings, is_configured, get_current_config
 from ..shared.logger import setup_logging, get_logger
 
 setup_logging()
@@ -43,20 +42,25 @@ async def lifespan(app: FastAPI):
             try:
                 logger.info("Initializing services with timeout...")
                 services_ok = await asyncio.wait_for(
-                    initialize_services(),
-                    timeout=30.0
+                    initialize_services(), timeout=30.0
                 )
                 if not services_ok:
                     logger.warning(
                         "Some services failed to initialize - continuing with degraded functionality"
                     )
             except asyncio.TimeoutError:
-                logger.error("⏰ Service initialization timeout - continuing with degraded functionality")
-                logger.info("💡 You can try to reconnect manually via the Configuration page")
+                logger.error(
+                    "⏰ Service initialization timeout - continuing with degraded functionality"
+                )
+                logger.info(
+                    "💡 You can try to reconnect manually via the Configuration page"
+                )
                 services_ok = False
             except Exception as e:
                 logger.error(f"❌ Service initialization failed: {str(e)}")
-                logger.info("💡 System will continue running with degraded functionality")
+                logger.info(
+                    "💡 System will continue running with degraded functionality"
+                )
                 services_ok = False
 
         app.state.startup_successful = services_ok
@@ -147,7 +151,7 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 app.include_router(
-    config.router,
+    config_api.router,
     prefix="/api/v1/config",
     tags=["Configuration"],
     responses={

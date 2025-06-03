@@ -12,7 +12,7 @@ from google.genai.types import (
     Type,
 )
 
-from ..core.config import settings
+from ..core.core_config import settings
 from ..core.exceptions import GeminiServiceError
 from ..shared.logger import get_logger
 

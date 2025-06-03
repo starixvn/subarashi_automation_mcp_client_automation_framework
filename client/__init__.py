@@ -3,6 +3,6 @@ __title__ = "MCP Client"
 __description__ = "Advanced MCP client with AI integration"
 __author__ = "MCP Client Team"
 
-from .core.config import settings
+from .core.core_config import settings
 
 __all__ = ["settings"]

@@ -2,14 +2,14 @@ from fastapi import APIRouter, HTTPException, Depends, Body
 from typing import Dict, Any, Optional
 from pydantic import BaseModel, Field
 
-from ...core.config_manager import (
+from ...core.core_config import (
     get_config_manager,
     get_current_config,
     update_config,
     is_configured,
     MCPClientConfig,
+    settings,
 )
-from ...core.config import settings
 from ..dependencies import reconfigure_services, get_tool_service, get_service_health
 from ...core.session_manager import TransportType
 from ...shared.logger import get_logger
@@ -374,7 +374,7 @@ async def switch_environment(environment: str):
 
         logger.info(f"Switching to environment: {environment}")
 
-        from ...core.config_manager import load_config
+        from ...core.core_config import load_config
 
         config = load_config(environment)
 

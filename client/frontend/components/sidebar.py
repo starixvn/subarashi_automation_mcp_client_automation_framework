@@ -12,33 +12,35 @@ from client.frontend.utils.api_client import get_api_client, run_async
 
 SIDEBAR_CACHE_TIMEOUT = 90
 
+
 def get_cached_sidebar_status():
     """Get sidebar status with caching to reduce API calls."""
     current_time = time.time()
-    
-    if hasattr(st.session_state, 'sidebar_status_cache'):
+
+    if hasattr(st.session_state, "sidebar_status_cache"):
         cache_time, cached_data = st.session_state.sidebar_status_cache
         if current_time - cache_time < SIDEBAR_CACHE_TIMEOUT:
             return cached_data
-    
+
     try:
         api_client = get_api_client()
         config_status = run_async(api_client.get_config_status())
         connection_status = run_async(api_client.get_connection_status())
         health = run_async(api_client.health_check())
-        
+
         combined_status = {
-            'config': config_status,
-            'connection': connection_status,
-            'health': health
+            "config": config_status,
+            "connection": connection_status,
+            "health": health,
         }
-        
+
         st.session_state.sidebar_status_cache = (current_time, combined_status)
         return combined_status
     except Exception as e:
-        if hasattr(st.session_state, 'sidebar_status_cache'):
+        if hasattr(st.session_state, "sidebar_status_cache"):
             return st.session_state.sidebar_status_cache[1]
         return None
+
 
 def render_sidebar():
     """Render the main sidebar with status and controls."""
@@ -73,8 +75,8 @@ def render_configuration_status():
         if not cached_status:
             st.warning("⚠️ Cannot check status")
             return
-            
-        config_status = cached_status.get('config')
+
+        config_status = cached_status.get("config")
 
         if config_status:
             if config_status.get("is_configured"):
@@ -113,8 +115,8 @@ def render_connection_status():
         if not cached_status:
             st.warning("⚠️ Cannot check status")
             return
-            
-        status = cached_status.get('connection')
+
+        status = cached_status.get("connection")
 
         if status and status.get("connected"):
             st.success("✅ MCP Server Connected")
@@ -142,8 +144,8 @@ def render_service_status():
         if not cached_status:
             st.warning("⚠️ Cannot check status")
             return
-            
-        health = cached_status.get('health')
+
+        health = cached_status.get("health")
 
         if health:
             status = health.get("status", "unknown")
@@ -164,8 +166,8 @@ def render_service_status():
                 st.write(f"**AI Model:** {model}")
                 tools = health.get("tools_available", 0)
                 st.write(f"**Tools:** {tools}")
-                
-            if hasattr(st.session_state, 'sidebar_status_cache'):
+
+            if hasattr(st.session_state, "sidebar_status_cache"):
                 cache_age = int(time.time() - st.session_state.sidebar_status_cache[0])
                 st.caption(f"Cache: {cache_age}s (refresh: {SIDEBAR_CACHE_TIMEOUT}s)")
 
@@ -184,8 +186,8 @@ def render_quick_actions():
 
     with col1:
         if st.button("🔄 Refresh Status", key="refresh_status"):
-            if hasattr(st.session_state, 'sidebar_status_cache'):
-                delattr(st.session_state, 'sidebar_status_cache')
+            if hasattr(st.session_state, "sidebar_status_cache"):
+                delattr(st.session_state, "sidebar_status_cache")
             st.success("✅ Status refreshed!")
             st.rerun()
 
@@ -256,13 +258,13 @@ def reconnect_server():
             result = run_async(api_client.reconnect_server())
 
             if result.get("success") and result.get("connected"):
-                if hasattr(st.session_state, 'sidebar_status_cache'):
-                    delattr(st.session_state, 'sidebar_status_cache')
-                if hasattr(st.session_state, 'health_cache'):
-                    delattr(st.session_state, 'health_cache')
-                if hasattr(st.session_state, 'tools_cache'):
-                    delattr(st.session_state, 'tools_cache')
-                    
+                if hasattr(st.session_state, "sidebar_status_cache"):
+                    delattr(st.session_state, "sidebar_status_cache")
+                if hasattr(st.session_state, "health_cache"):
+                    delattr(st.session_state, "health_cache")
+                if hasattr(st.session_state, "tools_cache"):
+                    delattr(st.session_state, "tools_cache")
+
                 st.success(
                     f"✅ Reconnected! {result.get('tools_count', 0)} tools available"
                 )
@@ -301,9 +303,9 @@ def refresh_tools():
     """Refresh tools from server with targeted cache clearing."""
     with st.spinner("Refreshing tools..."):
         try:
-            if hasattr(st.session_state, 'tools_cache'):
-                delattr(st.session_state, 'tools_cache')
-                
+            if hasattr(st.session_state, "tools_cache"):
+                delattr(st.session_state, "tools_cache")
+
             api_client = get_api_client()
             result = run_async(api_client.refresh_tools())
 
@@ -322,9 +324,9 @@ def test_connection():
     """Test MCP connection with fresh data."""
     with st.spinner("Testing connection..."):
         try:
-            if hasattr(st.session_state, 'sidebar_status_cache'):
-                delattr(st.session_state, 'sidebar_status_cache')
-                
+            if hasattr(st.session_state, "sidebar_status_cache"):
+                delattr(st.session_state, "sidebar_status_cache")
+
             api_client = get_api_client()
             health = run_async(api_client.health_check())
 
@@ -344,11 +346,11 @@ def render_debug_info():
 
         try:
             cached_status = get_cached_sidebar_status()
-            
+
             if cached_status:
                 st.write("**Cached Status Response:**")
                 st.json(cached_status)
-                
+
                 cache_age = int(time.time() - st.session_state.sidebar_status_cache[0])
                 st.write(f"**Cache Age:** {cache_age} seconds")
             else:
@@ -356,8 +358,11 @@ def render_debug_info():
 
             st.write("**Session State (filtered):**")
             filtered_state = {
-                key: value for key, value in dict(st.session_state).items()
-                if not key.endswith('_cache') and not 'password' in key.lower() and not 'key' in key.lower()
+                key: value
+                for key, value in dict(st.session_state).items()
+                if not key.endswith("_cache")
+                and not "password" in key.lower()
+                and not "key" in key.lower()
             }
             st.json(filtered_state)
 

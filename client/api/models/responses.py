@@ -23,7 +23,7 @@ class ToolCallResult(BaseModel):
 
 class PromptInfo(BaseModel):
     """Model for prompt information."""
-    
+
     name: str
     description: Optional[str] = None
     arguments: Optional[List[Dict[str, Any]]] = None
@@ -31,7 +31,7 @@ class PromptInfo(BaseModel):
 
 class ResourceInfo(BaseModel):
     """Model for resource information."""
-    
+
     uri: str
     name: str
     description: Optional[str] = None
@@ -92,7 +92,7 @@ class ToolCallResponse(BaseModel):
 
 class PromptListResponse(BaseModel):
     """Response model for prompts list endpoint."""
-    
+
     success: bool = Field(..., description="Whether the request was successful")
     prompts: List[PromptInfo] = Field(..., description="List of available prompts")
     count: int = Field(..., description="Number of prompts")
@@ -101,7 +101,7 @@ class PromptListResponse(BaseModel):
 
 class PromptGetResponse(BaseModel):
     """Response model for prompt get endpoint."""
-    
+
     success: bool = Field(..., description="Whether the request was successful")
     description: Optional[str] = Field(None, description="Prompt description")
     messages: List[Dict[str, Any]] = Field(..., description="Prompt messages")
@@ -110,16 +110,18 @@ class PromptGetResponse(BaseModel):
 
 class ResourceListResponse(BaseModel):
     """Response model for resources list endpoint."""
-    
+
     success: bool = Field(..., description="Whether the request was successful")
-    resources: List[ResourceInfo] = Field(..., description="List of available resources")
+    resources: List[ResourceInfo] = Field(
+        ..., description="List of available resources"
+    )
     count: int = Field(..., description="Number of resources")
     error: Optional[str] = Field(None, description="Error message if failed")
 
 
 class ResourceReadResponse(BaseModel):
     """Response model for resource read endpoint."""
-    
+
     success: bool = Field(..., description="Whether the request was successful")
     contents: List[Dict[str, Any]] = Field(..., description="Resource contents")
     error: Optional[str] = Field(None, description="Error message if failed")
@@ -135,7 +137,9 @@ class HealthResponse(BaseModel):
     tools_available: int = Field(..., description="Number of available tools")
     gemini_model: str = Field(..., description="Current Gemini model")
     uptime: str = Field(..., description="Service uptime")
-    capabilities: Optional[Dict[str, Any]] = Field(None, description="Server capabilities")
+    capabilities: Optional[Dict[str, Any]] = Field(
+        None, description="Server capabilities"
+    )
 
 
 class ConnectionResponse(BaseModel):
@@ -146,7 +150,9 @@ class ConnectionResponse(BaseModel):
     server_url: str = Field(..., description="MCP server URL")
     tools_count: int = Field(..., description="Number of available tools")
     transport_type: Optional[str] = Field(None, description="Transport type being used")
-    capabilities: Optional[Dict[str, Any]] = Field(None, description="Server capabilities")
+    capabilities: Optional[Dict[str, Any]] = Field(
+        None, description="Server capabilities"
+    )
     error: Optional[str] = Field(None, description="Error message if failed")
 
 
@@ -178,7 +184,9 @@ class ConfigResponse(BaseModel):
     is_configured: bool = Field(..., description="Whether system is fully configured")
     environment: str = Field(..., description="Current environment")
     config_source: str = Field(..., description="Configuration source")
-    services_reconfigured: bool = Field(False, description="Whether services were reconfigured")
+    services_reconfigured: bool = Field(
+        False, description="Whether services were reconfigured"
+    )
     error: Optional[str] = Field(None, description="Error message if failed")
 
 
@@ -189,4 +197,6 @@ class ConfigStatusResponse(BaseModel):
     has_api_key: bool = Field(..., description="Whether API key is configured")
     environment: str = Field(..., description="Current environment")
     config_source: str = Field(..., description="Configuration source")
-    missing_fields: List[str] = Field(default_factory=list, description="List of missing required fields")
+    missing_fields: List[str] = Field(
+        default_factory=list, description="List of missing required fields"
+    )

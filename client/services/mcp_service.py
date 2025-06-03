@@ -2,7 +2,7 @@ from typing import List, Dict, Any, Optional
 from mcp.types import Tool, CallToolResult, TextContent, ImageContent, EmbeddedResource
 
 from ..core.session_manager import SessionManager, TransportType
-from ..core.config import settings
+from ..core.core_config import settings
 from ..core.exceptions import MCPConnectionError, MCPToolCallError
 from ..shared.logger import get_logger
 
@@ -18,7 +18,11 @@ class MCPService:
         self._tools_cache: List[Tool] = []
         logger.info("Initialized MCP Service")
 
-    async def connect(self, server_url: Optional[str] = None, transport_type: TransportType = TransportType.SSE) -> bool:
+    async def connect(
+        self,
+        server_url: Optional[str] = None,
+        transport_type: TransportType = TransportType.SSE,
+    ) -> bool:
         """Connect to MCP server."""
         try:
             url = server_url or settings.mcp_server_url
@@ -77,7 +81,9 @@ class MCPService:
         try:
             logger.debug(f"Calling tool: {tool_name} with args: {arguments}")
 
-            result: CallToolResult = await self.session_manager.call_tool(tool_name, arguments)
+            result: CallToolResult = await self.session_manager.call_tool(
+                tool_name, arguments
+            )
 
             logger.debug(f"Tool {tool_name} completed successfully")
 
@@ -88,7 +94,7 @@ class MCPService:
                 elif isinstance(content, ImageContent):
                     content_text.append(f"[Image: {content.mimeType}]")
                 elif isinstance(content, EmbeddedResource):
-                    if hasattr(content.resource, 'text'):
+                    if hasattr(content.resource, "text"):
                         content_text.append(f"[Resource: {content.resource.text}]")
                     else:
                         content_text.append(f"[Resource: {content.resource.uri}]")

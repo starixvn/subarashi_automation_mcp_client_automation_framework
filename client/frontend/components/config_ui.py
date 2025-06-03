@@ -12,62 +12,66 @@ from client.frontend.utils.api_client import get_api_client, run_async
 
 CONFIG_CACHE_TIMEOUT = 60
 
+
 def get_cached_config_status():
     """Get config status with optimized caching."""
     current_time = time.time()
-    
-    if hasattr(st.session_state, 'config_status_cache'):
+
+    if hasattr(st.session_state, "config_status_cache"):
         cache_time, cached_data = st.session_state.config_status_cache
         if current_time - cache_time < CONFIG_CACHE_TIMEOUT:
             return cached_data
-    
+
     try:
         api_client = get_api_client()
         status = run_async(api_client.get_config_status())
         st.session_state.config_status_cache = (current_time, status)
         return status
     except Exception as e:
-        if hasattr(st.session_state, 'config_status_cache'):
+        if hasattr(st.session_state, "config_status_cache"):
             return st.session_state.config_status_cache[1]
         return None
+
 
 def get_cached_current_config():
     """Get current config with optimized caching."""
     current_time = time.time()
-    
-    if hasattr(st.session_state, 'current_config_cache'):
+
+    if hasattr(st.session_state, "current_config_cache"):
         cache_time, cached_data = st.session_state.current_config_cache
         if current_time - cache_time < CONFIG_CACHE_TIMEOUT:
             return cached_data
-    
+
     try:
         api_client = get_api_client()
         config = run_async(api_client.get_current_config())
         st.session_state.current_config_cache = (current_time, config)
         return config
     except Exception as e:
-        if hasattr(st.session_state, 'current_config_cache'):
+        if hasattr(st.session_state, "current_config_cache"):
             return st.session_state.current_config_cache[1]
         return None
+
 
 def clear_config_caches():
     """Clear config-related caches only when needed."""
     current_time = time.time()
-    
-    if hasattr(st.session_state, 'config_status_cache'):
+
+    if hasattr(st.session_state, "config_status_cache"):
         cache_time, _ = st.session_state.config_status_cache
         if current_time - cache_time > 300:  # 5 minutes
-            delattr(st.session_state, 'config_status_cache')
-    
-    if hasattr(st.session_state, 'current_config_cache'):
+            delattr(st.session_state, "config_status_cache")
+
+    if hasattr(st.session_state, "current_config_cache"):
         cache_time, _ = st.session_state.current_config_cache
         if current_time - cache_time > 300:  # 5 minutes
-            delattr(st.session_state, 'current_config_cache')
-    
-    if hasattr(st.session_state, 'health_cache'):
+            delattr(st.session_state, "current_config_cache")
+
+    if hasattr(st.session_state, "health_cache"):
         cache_time, _ = st.session_state.health_cache
         if current_time - cache_time > 300:  # 5 minutes
-            delattr(st.session_state, 'health_cache')
+            delattr(st.session_state, "health_cache")
+
 
 def render_configuration_page():
     """Render the main configuration page."""
@@ -91,6 +95,7 @@ def render_configuration_page():
     else:
         st.warning("⚠️ System needs configuration to function properly")
         render_configuration_form()
+
 
 def render_service_status():
     """Render current service status."""
@@ -130,23 +135,27 @@ def render_service_status():
             if health.get("capabilities"):
                 with st.expander("📋 Server Capabilities", expanded=False):
                     caps = health["capabilities"]
-                    
+
                     if "tools" in caps:
                         tools_info = caps["tools"]
                         if isinstance(tools_info, dict):
                             list_changed = tools_info.get("listChanged", False)
-                            st.write(f"🛠️ **Tools**: ✅ Available (Live updates: {'✅' if list_changed else '❌'})")
+                            st.write(
+                                f"🛠️ **Tools**: ✅ Available (Live updates: {'✅' if list_changed else '❌'})"
+                            )
                         else:
                             st.write("🛠️ **Tools**: ✅ Available")
-                    
+
                     if "prompts" in caps:
                         prompts_info = caps["prompts"]
                         if isinstance(prompts_info, dict):
                             list_changed = prompts_info.get("listChanged", False)
-                            st.write(f"📝 **Prompts**: ✅ Available (Live updates: {'✅' if list_changed else '❌'})")
+                            st.write(
+                                f"📝 **Prompts**: ✅ Available (Live updates: {'✅' if list_changed else '❌'})"
+                            )
                         else:
                             st.write("📝 **Prompts**: ✅ Available")
-                    
+
                     if "resources" in caps:
                         resources_info = caps["resources"]
                         if isinstance(resources_info, dict):
@@ -154,17 +163,25 @@ def render_service_status():
                             list_changed = resources_info.get("listChanged", False)
                             subscribe_text = "✅" if subscribe else "❌"
                             updates_text = "✅" if list_changed else "❌"
-                            st.write(f"📁 **Resources**: ✅ Available (Subscribe: {subscribe_text}, Live updates: {updates_text})")
+                            st.write(
+                                f"📁 **Resources**: ✅ Available (Subscribe: {subscribe_text}, Live updates: {updates_text})"
+                            )
                         else:
                             st.write("📁 **Resources**: ✅ Available")
-                    
+
                     if "logging" in caps:
                         st.write("📊 **Logging**: ✅ Available")
-                    
+
                     if "experimental" in caps:
                         st.write("🧪 **Experimental**: ✅ Available")
-                    
-                    known_caps = {"tools", "prompts", "resources", "logging", "experimental"}
+
+                    known_caps = {
+                        "tools",
+                        "prompts",
+                        "resources",
+                        "logging",
+                        "experimental",
+                    }
                     other_caps = set(caps.keys()) - known_caps
                     if other_caps:
                         for cap in other_caps:
@@ -173,27 +190,27 @@ def render_service_status():
             col1, col2, col3 = st.columns(3)
             with col2:
                 if st.button(
-                    "🔄 Reconfigure Services", 
+                    "🔄 Reconfigure Services",
                     help="Manually reconfigure all services",
-                    key="reconfigure_services_config"
+                    key="reconfigure_services_config",
                 ):
                     reconfigure_services()
-            
+
             if not health.get("mcp_connected"):
                 with col1:
                     if st.button(
-                        "🔗 Reconnect MCP", 
+                        "🔗 Reconnect MCP",
                         help="Force reconnect to MCP server",
                         type="primary",
-                        key="reconnect_mcp_config_disconnected"
+                        key="reconnect_mcp_config_disconnected",
                     ):
                         reconnect_mcp_server()
             else:
                 with col3:
                     if st.button(
-                        "🔗 Reconnect MCP", 
+                        "🔗 Reconnect MCP",
                         help="Force reconnect to MCP server",
-                        key="reconnect_mcp_config_connected"
+                        key="reconnect_mcp_config_connected",
                     ):
                         reconnect_mcp_server()
 
@@ -212,11 +229,11 @@ def reconfigure_services():
             result = run_async(api_client.reconfigure_services())
 
             if result and result.get("success"):
-                if hasattr(st.session_state, 'health_cache'):
-                    delattr(st.session_state, 'health_cache')
-                if hasattr(st.session_state, 'tools_cache'):
-                    delattr(st.session_state, 'tools_cache')
-                    
+                if hasattr(st.session_state, "health_cache"):
+                    delattr(st.session_state, "health_cache")
+                if hasattr(st.session_state, "tools_cache"):
+                    delattr(st.session_state, "tools_cache")
+
                 st.success("✅ Services reconfigured successfully!")
                 st.rerun()
             else:
@@ -239,19 +256,21 @@ def reconnect_mcp_server():
             result = run_async(api_client.reconnect_mcp())
 
             if result and result.get("success"):
-                if hasattr(st.session_state, 'health_cache'):
-                    delattr(st.session_state, 'health_cache')
-                if hasattr(st.session_state, 'tools_cache'):
-                    delattr(st.session_state, 'tools_cache')
-                
+                if hasattr(st.session_state, "health_cache"):
+                    delattr(st.session_state, "health_cache")
+                if hasattr(st.session_state, "tools_cache"):
+                    delattr(st.session_state, "tools_cache")
+
                 st.success("✅ MCP server reconnected successfully!")
-                
+
                 if result.get("tools_count", 0) > 0:
                     st.info(f"🛠️ Found {result['tools_count']} tools available")
-                
+
                 if result.get("capabilities"):
-                    st.info(f"📋 Server capabilities: {', '.join(result['capabilities'].keys())}")
-                
+                    st.info(
+                        f"📋 Server capabilities: {', '.join(result['capabilities'].keys())}"
+                    )
+
                 st.rerun()
             else:
                 error_msg = (
@@ -260,14 +279,16 @@ def reconnect_mcp_server():
                     else "Reconnection failed"
                 )
                 st.error(f"❌ MCP reconnection failed: {error_msg}")
-                
-                st.markdown("""
+
+                st.markdown(
+                    """
                 **💡 Troubleshooting Tips:**
                 - Check if the MCP server URL is correct
                 - Verify the server is running and accessible
                 - Try different transport type (SSE/WebSocket/Stdio)
                 - Check server logs for connection errors
-                """)
+                """
+                )
 
         except Exception as e:
             st.error(f"❌ MCP reconnection error: {str(e)}")
@@ -291,6 +312,9 @@ def render_configuration_form():
         )
 
         model_options = [
+            "gemini-2.5-flash-preview-05-20",
+            "gemini-2.5-pro-preview-05-06",
+            "gemini-2.0-flash-001",
             "gemini-2.0-flash-exp",
             "gemini-1.5-pro",
             "gemini-1.5-flash",
@@ -307,21 +331,21 @@ def render_configuration_form():
         st.markdown("### 🔗 MCP Server Configuration")
 
         col1, col2 = st.columns([3, 1])
-        
+
         with col1:
             mcp_url = st.text_input(
                 "MCP Server URL",
                 value=config_data.get("mcp_server_url", "http://localhost:5000/sse"),
                 help="URL of your MCP server",
             )
-        
+
         with col2:
             transport_options = ["sse", "websocket", "stdio"]
             transport_type = st.selectbox(
                 "Transport Type",
                 options=transport_options,
                 index=transport_options.index(config_data.get("transport_type", "sse")),
-                help="Communication protocol to use"
+                help="Communication protocol to use",
             )
 
         st.markdown("### 🎛️ AI Parameters")
@@ -433,20 +457,23 @@ def save_configuration(config_data: Dict[str, Any]):
             result = run_async(api_client.update_config(config_data))
 
             if result and result.get("success"):
-                if hasattr(st.session_state, 'config_status_cache'):
-                    delattr(st.session_state, 'config_status_cache')
-                if hasattr(st.session_state, 'current_config_cache'):
-                    delattr(st.session_state, 'current_config_cache')
-                
+                if hasattr(st.session_state, "config_status_cache"):
+                    delattr(st.session_state, "config_status_cache")
+                if hasattr(st.session_state, "current_config_cache"):
+                    delattr(st.session_state, "current_config_cache")
+
                 st.success("✅ Configuration saved successfully!")
 
                 if result.get("services_reconfigured"):
                     st.success("✅ Services automatically reconfigured!")
-                    if hasattr(st.session_state, 'health_cache'):
-                        delattr(st.session_state, 'health_cache')
+                    if hasattr(st.session_state, "health_cache"):
+                        delattr(st.session_state, "health_cache")
                 else:
                     st.warning("⚠️ Services may need manual reconfiguration")
-                    if st.button("🔄 Reconfigure Services Now", key="reconfigure_services_now_save"):
+                    if st.button(
+                        "🔄 Reconfigure Services Now",
+                        key="reconfigure_services_now_save",
+                    ):
                         reconfigure_services()
 
                 st.balloons()
@@ -472,7 +499,7 @@ def reset_configuration():
 
             if result and result.get("success"):
                 clear_config_caches()
-                
+
                 st.success("✅ Configuration reset successfully!")
                 st.rerun()
             else:

@@ -6,8 +6,7 @@ from typing import Dict, Any
 from ..dependencies import get_tool_service
 from ..models.responses import HealthResponse, StatusResponse, ConnectionResponse
 from ...services.tool_service import ToolService
-from ...core.config import settings
-from ...core.config_manager import is_configured, get_current_config
+from ...core.core_config import settings, is_configured, get_current_config
 from ...shared.logger import get_logger
 
 logger = get_logger(__name__)

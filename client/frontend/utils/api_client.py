@@ -10,6 +10,8 @@ project_root = current_file.parent.parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
+from client.core.core_config import settings
+
 
 class APIClient:
     """Client for communicating with FastAPI backend."""
@@ -132,10 +134,14 @@ class APIClient:
         """Get list of available prompts."""
         return await self._make_request("GET", "/api/v1/prompts/prompts")
 
-    async def get_prompt(self, prompt_name: str, arguments: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
+    async def get_prompt(
+        self, prompt_name: str, arguments: Optional[Dict[str, str]] = None
+    ) -> Dict[str, Any]:
         """Get a specific prompt."""
         params = {"arguments": arguments} if arguments else {}
-        return await self._make_request("GET", f"/api/v1/prompts/prompts/{prompt_name}", params=params)
+        return await self._make_request(
+            "GET", f"/api/v1/prompts/prompts/{prompt_name}", params=params
+        )
 
     async def list_resources(self) -> Dict[str, Any]:
         """Get list of available resources."""
@@ -143,15 +149,21 @@ class APIClient:
 
     async def read_resource(self, uri: str) -> Dict[str, Any]:
         """Read a resource by URI."""
-        return await self._make_request("GET", "/api/v1/resources/resources/read", params={"uri": uri})
+        return await self._make_request(
+            "GET", "/api/v1/resources/resources/read", params={"uri": uri}
+        )
 
     async def subscribe_resource(self, uri: str) -> Dict[str, Any]:
         """Subscribe to resource updates."""
-        return await self._make_request("POST", "/api/v1/resources/resources/subscribe", json={"uri": uri})
+        return await self._make_request(
+            "POST", "/api/v1/resources/resources/subscribe", json={"uri": uri}
+        )
 
     async def unsubscribe_resource(self, uri: str) -> Dict[str, Any]:
         """Unsubscribe from resource updates."""
-        return await self._make_request("POST", "/api/v1/resources/resources/unsubscribe", json={"uri": uri})
+        return await self._make_request(
+            "POST", "/api/v1/resources/resources/unsubscribe", json={"uri": uri}
+        )
 
 
 _api_client = None
@@ -162,7 +174,6 @@ def get_api_client() -> APIClient:
     global _api_client
     if _api_client is None:
         # Import settings here to avoid circular imports
-        from client.core.config import settings
         base_url = f"http://localhost:{settings.api_port}"
         _api_client = APIClient(base_url)
     return _api_client

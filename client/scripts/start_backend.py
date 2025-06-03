@@ -15,26 +15,31 @@ print(f"🔍 Project root: {project_root}")
 def main():
     """Start the FastAPI backend server with environment support."""
     parser = argparse.ArgumentParser(description="Run MCP Backend API")
-    parser.add_argument("environment", nargs="?", default="development", 
-                       choices=["development", "production", "dev", "prod"],
-                       help="Environment to run (default: development)")
+    parser.add_argument(
+        "environment",
+        nargs="?",
+        default="development",
+        choices=["development", "production", "dev", "prod"],
+        help="Environment to run (default: development)",
+    )
     parser.add_argument("--port", type=int, help="Port to run on (overrides config)")
     parser.add_argument("--host", type=str, help="Host to bind to (overrides config)")
-    parser.add_argument("--reload", action="store_true", help="Enable auto-reload (dev only)")
+    parser.add_argument(
+        "--reload", action="store_true", help="Enable auto-reload (dev only)"
+    )
     args = parser.parse_args()
-    
+
     env = "production" if args.environment in ["prod", "production"] else "development"
     os.environ["ENVIRONMENT"] = env
     print(f"🌍 Setting environment: {env}")
-    
+
     try:
-        from client.core.config_manager import load_config
-        from client.core.config import settings
+        from client.core.core_config import load_config, settings
         from client.shared.logger import setup_logging, get_logger
-        
+
         config = load_config(env)
         settings.refresh_from_config_manager()
-        
+
         print("✅ Imports successful")
     except Exception as e:
         print(f"❌ Import error: {str(e)}")
@@ -60,20 +65,21 @@ def main():
     print(f"📊 Max Tokens: {config.max_tokens}")
     print(f"🌡️ Temperature: {config.temperature}")
     print(f"🔧 Max Tool Calls: {config.max_tool_calls}")
-    
-    if hasattr(config, 'log_file') and config.log_file:
+
+    if hasattr(config, "log_file") and config.log_file:
         print(f"📝 Log File: {config.log_file}")
-    
+
     print("=" * 60)
-    
+
     if config.gemini_api_key:
         print("✅ Gemini API Key: Configured")
     else:
         print("⚠️ Gemini API Key: Not configured - Configure via frontend")
-    
+
     print("🔄 Testing imports...")
     try:
         import uvicorn
+
         print("✅ Uvicorn imported")
     except ImportError as e:
         print(f"❌ Failed to import uvicorn: {e}")
@@ -81,7 +87,7 @@ def main():
 
     try:
         print(f"🚀 Starting uvicorn server in {env} mode...")
-        
+
         uvicorn_config = {
             "app": "client.api.main:app",
             "host": host,
@@ -89,16 +95,18 @@ def main():
             "reload": reload,
             "log_level": config.log_level.lower(),
         }
-        
+
         if env == "production":
-            uvicorn_config.update({
-                "workers": 1,
-                "access_log": True,
-                "use_colors": False,
-                "server_header": False,
-                "date_header": False,
-            })
-        
+            uvicorn_config.update(
+                {
+                    "workers": 1,
+                    "access_log": True,
+                    "use_colors": False,
+                    "server_header": False,
+                    "date_header": False,
+                }
+            )
+
         logger.info(f"Starting FastAPI server with config: {uvicorn_config}")
         uvicorn.run(**uvicorn_config)
 

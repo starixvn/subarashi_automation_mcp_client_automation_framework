@@ -4,7 +4,7 @@ from google.genai.types import Content, Part
 
 from .mcp_service import MCPService
 from .gemini_service import GeminiService
-from ..core.config import settings
+from ..core.core_config import settings
 from ..core.session_manager import TransportType
 from ..core.exceptions import (
     GeminiServiceError,
@@ -155,13 +155,13 @@ class ToolService:
 
     async def connect_to_server(self, server_url: Optional[str] = None) -> bool:
         """Connect to MCP server and prepare tools."""
-        transport_str = getattr(settings, 'transport_type', 'sse')
+        transport_str = getattr(settings, "transport_type", "sse")
         try:
             transport = TransportType(transport_str)
         except ValueError:
             logger.warning(f"Invalid transport type '{transport_str}', using SSE")
             transport = TransportType.SSE
-            
+
         return await self.mcp_service.connect(server_url, transport)
 
     async def process_query(self, query: str) -> Dict[str, Any]:

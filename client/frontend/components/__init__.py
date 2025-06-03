@@ -23,7 +23,7 @@ from .tools import (
     execute_tool,
 )
 
-from .config import (
+from .config_ui import (
     render_configuration_page,
     render_configuration_form,
     render_current_configuration,
