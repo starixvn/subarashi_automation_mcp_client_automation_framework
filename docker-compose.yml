@@ -7,22 +7,21 @@ services:
       dockerfile: Dockerfile
     container_name: mcp-client
     ports:
-      - "5001:5001"  # Backend FastAPI API
-      - "5002:5002"  # Frontend Streamlit UI
+      - "80:80"
     environment:
       - ENVIRONMENT=production
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
     volumes:
       - ./logs:/app/logs
-      - ./config:/app/config:ro  # Read-only config mount
+      - ./config:/app/config:ro
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5001/api/v1/health/health"]
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 45s
 
 networks:
   default:
