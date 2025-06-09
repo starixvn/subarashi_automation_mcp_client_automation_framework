@@ -64,9 +64,9 @@ RUN mkdir -p /app/.streamlit && \
     chown -R mcpuser:mcpuser /app
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost/health || exit 1
+    CMD curl -f http://localhost:5000/health || exit 1
 
-EXPOSE 80
+EXPOSE 5000
 
 ENV ENVIRONMENT=production
 ENV PYTHONPATH=/app
@@ -113,7 +113,7 @@ RUN echo '#!/bin/bash' > /app/start-production.sh && \
     echo 'echo "🚀 Starting MCP Client in Production Mode..."' >> /app/start-production.sh && \
     echo 'echo "=================================="' >> /app/start-production.sh && \
     echo 'echo "Environment: $ENVIRONMENT"' >> /app/start-production.sh && \
-    echo 'echo "Single Port: http://0.0.0.0:80"' >> /app/start-production.sh && \
+    echo 'echo "Single Port: http://0.0.0.0:5000"' >> /app/start-production.sh && \
     echo 'echo "Backend (internal): http://127.0.0.1:5001"' >> /app/start-production.sh && \
     echo 'echo "Frontend (internal): http://127.0.0.1:5002"' >> /app/start-production.sh && \
     echo 'echo "=================================="' >> /app/start-production.sh && \
