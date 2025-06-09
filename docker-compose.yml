@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: mcp-client
     ports:
-      - "80:80"
+      - "5001:5001"
     environment:
       - ENVIRONMENT=production
       - PYTHONPATH=/app
@@ -17,7 +17,7 @@ services:
       - ./config:/app/config:ro
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:5001/api/v1/health/health"]
       interval: 30s
       timeout: 10s
       retries: 3
